@@ -65,12 +65,13 @@
 
     input, select, textarea {
       width: 100%;
-      min-height: 42px;
+      min-height: 36px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: rgba(0,0,0,.35);
       color: var(--ink);
-      padding: 9px 12px;
+      padding: 7px 10px;
+      font-size: 13px;
       transition: border-color .15s, box-shadow .15s;
     }
     input:focus, select:focus, textarea:focus {
@@ -82,9 +83,9 @@
 
     label {
       display: grid;
-      gap: 6px;
+      gap: 4px;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .06em;
@@ -180,23 +181,45 @@
       display: none;
       width: min(1420px, 100%);
       margin: 0 auto;
-      padding: 16px 18px 28px;
+      padding: 0 18px 28px;
       animation: fadeIn .35s ease;
+    }
+
+    /* ─── STICKY HEADER ─── */
+    .app-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11,15,16,.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 18px;
     }
 
     .topbar {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 14px;
+      gap: 10px;
       align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--line);
+      padding: 8px 0;
+      overflow: hidden;
+      max-height: 80px;
+      transition: max-height .3s ease, padding .3s ease, opacity .25s ease;
+      opacity: 1;
+    }
+
+    .topbar.hidden {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .brand h1 {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(22px, 3.5vw, 34px);
+      font-size: clamp(16px, 2.5vw, 22px);
       font-weight: 800;
       letter-spacing: -.03em;
       background: linear-gradient(90deg, var(--ink) 50%, var(--brand) 100%);
@@ -206,14 +229,14 @@
     }
 
     .brand p {
-      margin-top: 3px;
+      margin-top: 2px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 11px;
     }
 
     .userbox {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       align-items: center;
       flex-wrap: wrap;
       justify-content: flex-end;
@@ -222,12 +245,12 @@
     .user-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
+      gap: 6px;
+      padding: 4px 10px;
       background: var(--panel-2);
       border: 1px solid var(--line);
       border-radius: 99px;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--muted);
     }
@@ -255,18 +278,19 @@
     /* ─── NAV ─── */
     .nav {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
-      margin-bottom: 18px;
+      padding: 6px 0;
     }
 
     .nav button {
       background: transparent;
       color: var(--muted);
       border: 1px solid var(--line);
-      min-height: 38px;
-      padding: 0 16px;
-      font-size: 14px;
+      min-height: 32px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 700;
     }
     .nav button:hover { background: var(--panel-2); color: var(--ink); box-shadow: none; }
     .nav button.active {
@@ -305,8 +329,8 @@
 
     .search-row {
       display: grid;
-      grid-template-columns: minmax(200px, 1fr) 170px 130px;
-      gap: 9px;
+      grid-template-columns: minmax(160px, 1fr) 140px 110px;
+      gap: 7px;
     }
 
     .toggle {
@@ -678,29 +702,30 @@
 
   <!-- APP -->
   <main class="app" id="app">
-    <header class="topbar">
-      <div class="brand">
-        <h1>Control de Stock 3D</h1>
-        <p id="subtitle">Venta rápida</p>
-      </div>
-      <div class="userbox">
-        <div class="user-badge">
-          <span class="user-dot"></span>
-          <span id="currentUserLabel">—</span>
+    <div class="app-sticky" id="appSticky">
+      <header class="topbar" id="topbar">
+        <div class="brand">
+          <h1>Control de Stock 3D</h1>
+          <p id="subtitle">Venta rápida</p>
         </div>
-        <div class="user-badge" title="Estado de sincronización">
-          <span class="sync-dot sync-ok" id="syncStatus"></span>
-          <span style="font-size:11px">Nube</span>
+        <div class="userbox">
+          <div class="user-badge">
+            <span class="user-dot"></span>
+            <span id="currentUserLabel">—</span>
+          </div>
+          <div class="user-badge" title="Estado de sincronización">
+            <span class="sync-dot sync-ok" id="syncStatus"></span>
+            <span style="font-size:11px">Nube</span>
+          </div>
+          <button class="secondary slim" id="logoutBtn">Salir</button>
         </div>
-        <button class="secondary slim" id="logoutBtn">Salir</button>
-      </div>
-    </header>
-
-    <nav class="nav">
-      <button class="active" data-screen="sell">🛍 Vender</button>
-      <button class="secondary" data-screen="reports">📊 Reportes</button>
-      <button class="secondary" data-screen="settings">⚙️ Configuración</button>
-    </nav>
+      </header>
+      <nav class="nav">
+        <button class="active" data-screen="sell">🛍 Vender</button>
+        <button class="secondary" data-screen="reports">📊 Reportes</button>
+        <button class="secondary" data-screen="settings">⚙️ Configuración</button>
+      </nav>
+    </div>
 
     <!-- VENDER -->
     <section class="screen active" id="screen-sell">
@@ -1295,6 +1320,20 @@
       const item = inventory.find(i=>i.id===row.dataset.id);
       if (item) fillProductForm(item);
     });
+
+    // ─── SCROLL: ocultar header ───
+    let lastScroll = 0;
+    window.addEventListener("scroll", () => {
+      const current = window.scrollY;
+      const topbar = document.getElementById("topbar");
+      if (!topbar) return;
+      if (current > lastScroll && current > 50) {
+        topbar.classList.add("hidden");
+      } else {
+        topbar.classList.remove("hidden");
+      }
+      lastScroll = current <= 0 ? 0 : current;
+    }, { passive: true });
 
     // ─── INIT ───
     clearProductForm();
